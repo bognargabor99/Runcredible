@@ -3,13 +3,15 @@ package hu.bme.aut.android.runcredible.service
 import android.app.*
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.room.Room
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
+import hu.bme.aut.android.runcredible.MainActivity
+import hu.bme.aut.android.runcredible.R
 import hu.bme.aut.android.runcredible.database.LocationModel
 import hu.bme.aut.android.runcredible.database.RunningDatabase
 import hu.bme.aut.android.runcredible.location.LocationHelper
@@ -48,19 +50,13 @@ class LocationService : Service() {
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        startForeground(NOTIFICATION_ID, createNotification())
         isRunning = true
         if (locationHelper == null) {
             val helper = LocationHelper(applicationContext, LocationServiceCallback())
             helper.startLocationMonitoring()
             locationHelper = helper
         }
-
-        val handler = Looper.getMainLooper()
-
-        handler.run {
-            Toast.makeText(this@LocationService, "started", Toast.LENGTH_SHORT).show()
-        }
-
         return Service.START_STICKY
     }
 
@@ -83,15 +79,44 @@ class LocationService : Service() {
         }
     }
 
+    private fun createNotification(): Notification {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        createNotificationChannel()
+
+        val contentIntent = PendingIntent.getActivity(this,
+                NOTIFICATION_ID,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT)
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_text))
+                .setSmallIcon(R.drawable.directions_run)
+                .setVibrate(longArrayOf(1000, 2000, 1000))
+                .setContentIntent(contentIntent)
+                .build()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                    CHANNEL_ID,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_LOW
+            )
+            val manager = getSystemService(
+                    NotificationManager::class.java
+            )
+            manager.createNotificationChannel(serviceChannel)
+        }
+    }
+
     override fun onDestroy() {
         locationHelper?.stopLocationMonitoring()
-        val handler = Looper.getMainLooper()
 
         isRunning = false
-
-        handler.run {
-            Toast.makeText(this@LocationService, "destroyed", Toast.LENGTH_SHORT).show()
-        }
 
         if (thisRunLocations.isNotEmpty()) {
             repository.insertNewRunning(thisRunLocations)

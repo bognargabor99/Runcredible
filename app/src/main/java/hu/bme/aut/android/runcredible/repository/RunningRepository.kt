@@ -18,15 +18,11 @@ class RunningRepository(private val runDao: LocationDao) {
         return ret
     }
 
-    private fun getMaxRunning(): Int {
-        var ret = 0
-        thread { ret = runDao.getMaxRunningId() }
-        return ret
-    }
-
     fun insertNewRunning(runLocations: List<LocationModel>) {
-        val newRunId = getMaxRunning() + 1
-        runLocations.forEach { it.runningId = newRunId }
-        thread { runDao.insertNewRunning(runLocations) }
+        thread {
+            val newRunId = runDao.getMaxRunningId() + 1
+            runLocations.forEach { it.runningId = newRunId }
+            runDao.insertNewRunning(runLocations)
+        }
     }
 }

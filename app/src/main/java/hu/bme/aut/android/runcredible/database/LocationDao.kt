@@ -12,6 +12,9 @@ interface LocationDao {
     @Query("SELECT * FROM locations")
     fun getAllLocations() : List<LocationModel>
 
+    @Query("SELECT DISTINCT runningId FROM locations")
+    fun getRunningIds(): List<Int>
+
     @Query("SELECT MAX(runningId) FROM locations")
     fun getMaxRunningId(): Int
 
