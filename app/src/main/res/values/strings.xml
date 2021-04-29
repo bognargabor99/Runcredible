@@ -3,4 +3,5 @@
     <string name="start_running">Start running</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prev_runs">Previous runs</string>
+    <string name="stop_running">Stop running</string>
 </resources>
