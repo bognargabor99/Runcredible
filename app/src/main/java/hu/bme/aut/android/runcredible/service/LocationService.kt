@@ -1,12 +1,16 @@
 package hu.bme.aut.android.runcredible.service
 
 import android.app.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.room.Room
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -24,6 +28,7 @@ class LocationService : Service() {
     private lateinit var repository: RunningRepository
 
     companion object {
+        private const val STOP_FILTER = "STOP_RUNCREDIBLE_MONITORING"
         private const val NOTIFICATION_ID = 101
         const val CHANNEL_ID = "ForegroundServiceChannel"
         var isRunning: Boolean = false
@@ -50,6 +55,11 @@ class LocationService : Service() {
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        if (intent.action.equals(STOP_FILTER)) {
+            Log.d("locService", "Stopping service")
+            stopSelf()
+        }
+
         startForeground(NOTIFICATION_ID, createNotification())
         isRunning = true
         if (locationHelper == null) {
@@ -90,12 +100,17 @@ class LocationService : Service() {
                 notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT)
 
+        val stopIntent = Intent(this, LocationService::class.java)
+        stopIntent.action = STOP_FILTER
+
+        val stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
         return NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.notification_title))
                 .setContentText(getString(R.string.notification_text))
                 .setSmallIcon(R.drawable.directions_run)
-                .setVibrate(longArrayOf(1000, 2000, 1000))
                 .setContentIntent(contentIntent)
+                .addAction(0, getString(R.string.stop), stopPendingIntent)
                 .build()
     }
 
@@ -106,9 +121,7 @@ class LocationService : Service() {
                     "Foreground Service Channel",
                     NotificationManager.IMPORTANCE_LOW
             )
-            val manager = getSystemService(
-                    NotificationManager::class.java
-            )
+            val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
         }
     }
@@ -125,6 +138,7 @@ class LocationService : Service() {
         }
         else
             Log.d("locService", "Not inserted")
+
         super.onDestroy()
     }
 }

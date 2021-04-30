@@ -6,4 +6,5 @@
     <string name="stop_running">Stop running</string>
     <string name="notification_title">Tracking running route</string>
     <string name="notification_text">Tap to enter app</string>
+    <string name="stop">Stop</string>
 </resources>
