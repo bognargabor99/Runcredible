@@ -12,8 +12,8 @@ class LocationHelper(private val context: Context, private val callback: Locatio
     fun startLocationMonitoring() {
         Log.d("locService", "Started monitoring location")
         val request = LocationRequest().apply {
-            interval = 10000L
-            fastestInterval = 3000L
+            interval = 60000L
+            fastestInterval = 30000L
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 

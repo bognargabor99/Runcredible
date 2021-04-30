@@ -7,15 +7,18 @@ import androidx.room.Query
 @Dao
 interface LocationDao {
     @Insert
-    fun insertNewRunning(locationModel: List<LocationModel>)
+    fun insertNewRunLocations(locationModel: List<LocationModel>)
+
+    @Insert
+    fun insertNewRunEntity(entity: RunEntity)
 
     @Query("SELECT * FROM locations")
     fun getAllLocations() : List<LocationModel>
 
-    @Query("SELECT DISTINCT runningId FROM locations")
-    fun getRunningIds(): List<Int>
+    @Query("SELECT * FROM runs")
+    fun getRunEntities(): List<RunEntity>
 
-    @Query("SELECT MAX(runningId) FROM locations")
+    @Query("SELECT MAX(Id) FROM runs")
     fun getMaxRunningId(): Int
 
     @Query("SELECT * FROM locations WHERE runningId = :runId ORDER BY time ASC")

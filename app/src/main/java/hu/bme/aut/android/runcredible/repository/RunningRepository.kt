@@ -2,6 +2,9 @@ package hu.bme.aut.android.runcredible.repository
 
 import hu.bme.aut.android.runcredible.database.LocationDao
 import hu.bme.aut.android.runcredible.database.LocationModel
+import hu.bme.aut.android.runcredible.database.RunEntity
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.thread
 
 class RunningRepository(private val runDao: LocationDao) {
@@ -21,8 +24,11 @@ class RunningRepository(private val runDao: LocationDao) {
     fun insertNewRunning(runLocations: List<LocationModel>) {
         thread {
             val newRunId = runDao.getMaxRunningId() + 1
+            val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(System.currentTimeMillis())
+            val runEntity = RunEntity(newRunId, dateString)
             runLocations.forEach { it.runningId = newRunId }
-            runDao.insertNewRunning(runLocations)
+            runDao.insertNewRunEntity(runEntity)
+            runDao.insertNewRunLocations(runLocations)
         }
     }
 }
