@@ -1,5 +1,6 @@
 package hu.bme.aut.android.runcredible.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -16,7 +17,7 @@ interface LocationDao {
     fun getAllLocations() : List<LocationModel>
 
     @Query("SELECT * FROM runs")
-    fun getRunEntities(): List<RunEntity>
+    fun getRunEntities(): LiveData<List<RunEntity>>
 
     @Query("SELECT MAX(Id) FROM runs")
     fun getMaxRunningId(): Int
@@ -25,5 +26,8 @@ interface LocationDao {
     fun getRunning(runId: Int): List<LocationModel>
 
     @Query("DELETE FROM locations WHERE runningId = :runId")
+    fun deleteRunningLocations(runId: Int)
+
+    @Query("DELETE FROM runs WHERE Id = :runId")
     fun deleteRunning(runId: Int)
 }

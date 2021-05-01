@@ -16,15 +16,17 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import hu.bme.aut.android.runcredible.MainActivity
 import hu.bme.aut.android.runcredible.R
+import hu.bme.aut.android.runcredible.RunningApplication
 import hu.bme.aut.android.runcredible.database.LocationModel
 import hu.bme.aut.android.runcredible.database.RunningDatabase
 import hu.bme.aut.android.runcredible.location.LocationHelper
 import hu.bme.aut.android.runcredible.repository.RunningRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.round
 
 class LocationService : Service() {
     private val thisRunLocations = mutableListOf<LocationModel>()
-    private lateinit var database: RunningDatabase
     private lateinit var repository: RunningRepository
 
     companion object {
@@ -42,13 +44,7 @@ class LocationService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        database = Room.databaseBuilder(
-                this,
-                RunningDatabase::class.java,
-                "runningDB")
-                .build()
-
-        repository = RunningRepository(database.runningDao())
+        repository = RunningRepository(RunningApplication.runningDatabase.runningDao())
         Log.d("locService", "Opened database, created repository")
     }
 
@@ -67,7 +63,7 @@ class LocationService : Service() {
             helper.startLocationMonitoring()
             locationHelper = helper
         }
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     inner class LocationServiceCallback : LocationCallback() {
@@ -132,7 +128,7 @@ class LocationService : Service() {
         isRunning = false
 
         if (thisRunLocations.isNotEmpty()) {
-            repository.insertNewRunning(thisRunLocations)
+            GlobalScope.launch { repository.insertNewRunning(thisRunLocations) }
             Log.d("locService", "Inserted new running")
             Log.d("locService", thisRunLocations.toString())
         }

@@ -7,4 +7,6 @@
     <string name="notification_title">Tracking running route</string>
     <string name="notification_text">Tap to enter app</string>
     <string name="stop">Stop</string>
+    <string name="btn_remove_description">Remove button</string>
+    <string name="img_run_description">Run icon</string>
 </resources>

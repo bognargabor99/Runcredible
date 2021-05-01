@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/todo_list"
+        android:id="@+id/run_list"
         android:name="hu.bme.aut.android.todo.TodoListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".TodoListActivity"/>
-        <!--tools:listitem="@layout/item_run" />!-->
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:context=".TodoListActivity"
+        tools:listitem="@layout/item_run" />
 </FrameLayout>
