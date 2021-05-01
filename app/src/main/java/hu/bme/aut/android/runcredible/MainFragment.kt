@@ -22,11 +22,11 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(LayoutInflater.from(requireContext()))
+        binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         runningServiceIntent = Intent(requireContext(), LocationService::class.java)
 
         binding.btnPrevRuns.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_mainFragment_to_listFragment2)
+            view?.findNavController()?.navigate(R.id.action_mainFragment_to_listFragment)
         }
 
         binding.btnStartRun.isEnabled = !LocationService.isRunning

@@ -11,7 +11,7 @@
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_listFragment2"
+            android:id="@+id/action_mainFragment_to_listFragment"
             app:destination="@id/listFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
@@ -22,5 +22,21 @@
         android:id="@+id/listFragment"
         android:name="hu.bme.aut.android.runcredible.ListFragment"
         android:label="fragment_list"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_runDetailFragment"
+            app:destination="@id/runDetailFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/runDetailFragment"
+        android:name="hu.bme.aut.android.runcredible.RunDetailFragment"
+        android:label="fragment_run_detail"
+        tools:layout="@layout/fragment_run_detail" >
+        <argument
+            android:name="run_id"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
 </navigation>
