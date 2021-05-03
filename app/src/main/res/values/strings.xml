@@ -9,4 +9,15 @@
     <string name="stop">Stop</string>
     <string name="btn_remove_description">Remove button</string>
     <string name="img_run_description">Run icon</string>
+    <string name="show_routes">Routes</string>
+    <string name="show_stats">Statistics</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="distance">Distance</string>
+    <string name="stats_run_length">%1$d meters</string>
+    <string name="duration">Duration</string>
+    <string name="stats_run_duration">%1$d minutes %2$d seconds</string>
+    <string name="speed">Speed</string>
+    <string name="stats_run_speed">%2$.2f km/h (%1$.2f m/s)</string>
+    <string name="tracked_points">Tracked points</string>
 </resources>

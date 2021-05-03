@@ -16,5 +16,6 @@
     <color name="secondaryDarkColor">#5a9216</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="half_transparent_black">#88000000</color>
 
 </resources>

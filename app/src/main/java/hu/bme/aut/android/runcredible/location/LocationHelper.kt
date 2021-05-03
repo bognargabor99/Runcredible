@@ -13,7 +13,7 @@ class LocationHelper(private val context: Context, private val callback: Locatio
         Log.d("locService", "Started monitoring location")
         val request = LocationRequest().apply {
             interval = 60000L
-            fastestInterval = 30000L
+            fastestInterval = 40000L
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 

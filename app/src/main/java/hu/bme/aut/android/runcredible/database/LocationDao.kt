@@ -13,9 +13,6 @@ interface LocationDao {
     @Insert
     fun insertNewRunEntity(entity: RunEntity)
 
-    @Query("SELECT * FROM locations")
-    fun getAllLocations() : List<LocationModel>
-
     @Query("SELECT * FROM runs")
     fun getRunEntities(): LiveData<List<RunEntity>>
 

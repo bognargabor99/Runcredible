@@ -127,7 +127,7 @@ class LocationService : Service() {
 
         isRunning = false
 
-        if (thisRunLocations.isNotEmpty()) {
+        if (thisRunLocations.size > 1) {
             GlobalScope.launch { repository.insertNewRunning(thisRunLocations) }
             Log.d("locService", "Inserted new running")
             Log.d("locService", thisRunLocations.toString())

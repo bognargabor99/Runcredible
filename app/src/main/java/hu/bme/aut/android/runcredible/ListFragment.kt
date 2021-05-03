@@ -8,13 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import hu.bme.aut.android.runcredible.adapter.RunAdapter
 import hu.bme.aut.android.runcredible.database.RunEntity
-import hu.bme.aut.android.runcredible.database.RunningDatabase
 import hu.bme.aut.android.runcredible.databinding.FragmentListBinding
-import hu.bme.aut.android.runcredible.repository.RunningRepository
 import hu.bme.aut.android.runcredible.viewmodel.RunningViewModel
 
 class ListFragment : Fragment(), RunAdapter.RunItemClickListener {
@@ -26,7 +22,6 @@ class ListFragment : Fragment(), RunAdapter.RunItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("litFragment", "onCreateView called")
         binding = FragmentListBinding.inflate(layoutInflater, container, false)
         runningViewModel = ViewModelProvider(this).get(RunningViewModel::class.java)
         runningViewModel.allRunnings.observe(viewLifecycleOwner) {
