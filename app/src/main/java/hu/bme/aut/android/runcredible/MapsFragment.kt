@@ -14,8 +14,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.ui.IconGenerator
 
+class MapsFragment : Fragment() {
+    private var route: ArrayList<LatLng>? = null
 
-class MapsFragment(private val route: List<LatLng>) : Fragment() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            route = it.getParcelableArrayList("route")
+        }
+    }
 
     private val callback = OnMapReadyCallback { googleMap ->
         try {
@@ -26,23 +33,38 @@ class MapsFragment(private val route: List<LatLng>) : Fragment() {
         } catch (e: Resources.NotFoundException) {
             Log.e("map", "Can't find style. Error: ", e)
         }
-        googleMap.addPolyline(PolylineOptions()
-            .addAll(route)
-            .color(Color.argb(255, 0, 128, 0))
-            .pattern(listOf(Dot()))
-            .endCap(RoundCap())
-            .startCap(ButtCap())
-            .jointType(JointType.ROUND)
-            .width(20f)
-        )
-        val generator = IconGenerator(context)
-        val optionsStart = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(generator.makeIcon(getString(R.string.start)))).position(route.first()).anchor(generator.anchorU, generator.anchorV)
-        val optionsEnd = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(generator.makeIcon(getString(R.string.end)))).position(route.last()).anchor(generator.anchorU, generator.anchorV)
-        googleMap.addMarker(optionsStart)
-        googleMap.addMarker(optionsEnd)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.first(), 15f))
-        googleMap.setMaxZoomPreference(30f)
-        googleMap.setMinZoomPreference(10f)
+        route?.let {
+            googleMap.addPolyline(
+                PolylineOptions()
+                    .addAll(it)
+                    .color(Color.argb(255, 0, 128, 0))
+                    .pattern(listOf(Dot()))
+                    .endCap(RoundCap())
+                    .startCap(ButtCap())
+                    .jointType(JointType.ROUND)
+                    .width(20f)
+            )
+            val generator = IconGenerator(context)
+            val optionsStart = MarkerOptions().icon(
+                BitmapDescriptorFactory.fromBitmap(
+                    generator.makeIcon(
+                        getString(R.string.start)
+                    )
+                )
+            ).position(it.first()).anchor(generator.anchorU, generator.anchorV)
+            val optionsEnd = MarkerOptions().icon(
+                BitmapDescriptorFactory.fromBitmap(
+                    generator.makeIcon(
+                        getString(R.string.end)
+                    )
+                )
+            ).position(it.last()).anchor(generator.anchorU, generator.anchorV)
+            googleMap.addMarker(optionsStart)
+            googleMap.addMarker(optionsEnd)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it.first(), 15f))
+            googleMap.setMaxZoomPreference(30f)
+            googleMap.setMinZoomPreference(10f)
+        }
     }
 
     override fun onCreateView(
@@ -57,5 +79,14 @@ class MapsFragment(private val route: List<LatLng>) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+    }
+
+    companion object {
+        fun newInstance(route: ArrayList<LatLng>) =
+            MapsFragment().apply {
+                val bundle = Bundle()
+                bundle.putParcelableArrayList("route", route)
+                arguments = bundle
+            }
     }
 }

@@ -29,7 +29,7 @@ class RunDetailFragment : Fragment() {
         binding = FragmentRunDetailBinding.inflate(layoutInflater, container, false)
 
         childFragmentManager.beginTransaction()
-            .add(R.id.mapContainer, MapsFragment(locations.map { LatLng(it.latitude, it.longitude) }))
+            .add(R.id.mapContainer, MapsFragment.newInstance(ArrayList(locations.map { LatLng(it.latitude, it.longitude) })))
             .commit()
 
         val fullDistanceMeters = calculateDistance(locations.map { LatLng(it.latitude, it.longitude) })
